@@ -1,0 +1,13 @@
+__pycache__/
+.ipynb_checkpoints/
+.env/
+.envs/
+*.pyc
+*.pkl
+*.sqlite
+data/raw/
+data/large/
+.vscode/
+.DS_Store
+/results/
+executed.ipynb

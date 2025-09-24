@@ -1,0 +1,4 @@
+bibkey,title,authors,year,venue,tags,one_line,method,dataset,metric,results,priority,read_status,link
+welch1995_kalman,An Introduction to the Kalman Filter,"Welch, G.; Bishop, G.",1995,TechReport,SensorFusion;Kalman;tutorial,Classic Kalman filter tutorial,Kalman Filter,N/A,N/A,Introductory tutorial; foundational,high,read,https://www.cs.unc.edu/~welch/media/pdf/kalman_intro.pdf
+camacho2013_mpc,Model Predictive Control,"Camacho, E. F.; Bordons, C.",2013,Book,MPC;survey;book,Comprehensive MPC textbook and reference,MPC (various),N/A,N/A,Textbook covering theory and applications,high,to_read,https://link.springer.com/book/10.1007/978-3-642-26049-3
+smith2023_mpc_survey,Survey of Modern MPC Techniques,"Smith, J.; Doe, A.",2023,Journal,MPC;survey;review,Survey of recent advances in MPC algorithms and applications,MPC-nonlinear;MPC-robust,Various benchmarks,tracking error,Summarizes trends and open problems,medium,to_read,https://doi.org/10.xxxx/xxxx

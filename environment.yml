@@ -1,0 +1,24 @@
+name: control-hub
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - matplotlib
+  - pandas
+  - jupyterlab
+  - ipywidgets
+  - pip
+  - pip:
+    - casadi
+    - do-mpc
+    - cvxpy
+    - osqp
+    - torch
+    - torchvision
+    - scikit-learn
+    - filterpy
+    - gymnasium
+    - stable-baselines3
+    - gtsam
