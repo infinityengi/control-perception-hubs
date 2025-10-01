@@ -1,13 +1,8 @@
 # Control & Perception Knowledge Hub — README
 
-**One-line:** a single-repo knowledge hub & portfolio template for learning, experimenting and showcasing work in
+A single-repo knowledge hub & portfolio template for learning, experimenting and showcasing work in
 Model Predictive Control (MPC), Robust Control, Networked Control Systems (NCS), Sensor Fusion, and Machine-Learning for Perception & Control.
 
-This README is  *complete navigation manual + contributor guide*. It explains the repository layout, how to use each folder, where to add new content (with expected formats), a beginner roadmap, contribution rules, and reproducible setup (Conda, pip, and Docker).
----
-
-> **Quick links**
->
 > * Root README (this file): `README.md`
 > * Environment: `environment.yml` / `requirements.txt`
 > * Example project (MPC): `projects/mpc-cartpole/`
