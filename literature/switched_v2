@@ -1,0 +1,294 @@
+# Switched event-based control for nonlinear cyber-physical systems under deception attacks
+
+Fan Yang · Zhou Gu · Shen Yan
+
+Received: 25 January 2021 / Accepted: 12 August 2021 / Published online: 8 October 2021  
+© The Author(s), under exclusive licence to Springer Nature B.V. 2021
+
+## Abstract
+
+We address the event-based control of nonlinear cyber-physical systems subject to deception attacks. In particular, an improved Takagi–Sugeno (T–S) fuzzy model is employed to solve the mismatch problem between the fuzzy system and fuzzy controllers. From the perspective of attack detection, we construct a novel queuing model to depict deception attacks. Then, a switched event-based communication scheme is proposed, which dynamically converts with different attack modes. The idea is to appropriately reduce the number of triggers according to the severity level of attacks, which can further save network resources. By using piecewise Lyapunov functional methods, we find a solution to the co-design of fuzzy controllers and event-triggering parameters while the concerned system is guaranteed to be exponentially stable. Finally, we apply the proposed approach to a mass–spring–damper system, where the effectiveness is well verified.
+
+**Keywords** Cyber-physical systems · Event-triggered mechanism · Takagi–Sugeno fuzzy model · Deception attacks · Piecewise Lyapunov functional
+
+---
+
+Z. Gu (B) · F. Yang · S. Yan  
+College of Mechanical and Electronic Engineering, Nanjing Forestry University, Nanjing 210037, People’s Republic of China  
+e-mail: gzh1808@163.com
+
+F. Yang  
+e-mail: yfan0510@sina.cn
+
+S. Yan  
+e-mail: yanshenzdh@gmail.com
+
+---
+
+## 1 Introduction
+
+Recent years have witnessed remarkable progress in cyber-physical systems (CPSs), which can be defined as a tight coupling of computation, communication, and physical plants [1,2]. Some potential applications include, but are not limited to, next-generation smart grids, autonomous vehicles, healthcare devices, and home automation [3]. From the perspective of control modeling, the dynamic physical process of CPSs is often approximated by a linear model [4], while nonlinear characteristics are consistent with actual systems. Linear approximation approaches have been developed to resolve the difficulty in analyzing nonlinear systems; for instance, Takagi–Sugeno (T–S) fuzzy models have been verified as an effective alternative [5]. Compared with conventional T–S fuzzy approaches (where the same membership and premise variables are employed), an imperfect premise-matching design strategy is proposed to increase design flexibility [6], especially in networked contexts. Reference [7] constructed independent membership and premise variables for the concerned system and feedback controllers in the presence of cyber-attacks. In [8], a novel type-2 fuzzy filter was established to investigate nonlinear networked control systems subject to parameter uncertainties, where the premise variables differed from those of the fuzzy system.
+
+During the operation of a CPS, shared or dedicated networks are a core ingredient. Every component and their interconnections can be a risk factor for cyber-attacks because CPSs are large-scale and geographically dispersed [9]. Moreover, cyber-security techniques alone are not enough to guarantee CPS security; control approaches can be adopted as a compensatory practice [10]. New challenges arise in control problems, with denial-of-service (DoS) attacks and deception attacks attracting much research interest [11–15]. It is critical to model cyber-attacks appropriately before controller design. For DoS attacks, several typical models or handling methods have been proposed. Stochastic models have been used to describe DoS attacks—for example, Bernoulli models [16] and Markov models [17]. However, [18] argued that stochastic models do not always reflect attackers' intentions realistically. As an alternative, a queuing model treats DoS as a special kind of network-induced delay and uses DoS frequency and duration to constrain attacker behavior. Building on this, [19] set constraints on sleeping and active time intervals of nonperiodic DoS attacks, extending the concepts of DoS frequency and duration.
+
+Deception attacks in the literature are mostly modeled stochastically [20], often neglecting the attacker's viewpoint. Because deception attacks are stealthy and time-varying, modeling them as queue-like processes (based on detection) can provide new insights. That motivates the present work.
+
+Event-based control strategies have been developed to improve network utilization. Examples include an event-based sampling strategy where the control input is updated only at discrete instants [21], and a periodic event-triggered mechanism (ETM) that excludes Zeno behavior by releasing data only at sampling instants [22]. Many improvements and variants exist [23–32]. It remains a research challenge to adjust ETMs in the presence of deception attacks, which motivates the contribution below.
+
+The contributions of this paper are:
+1. We employ an improved T–S fuzzy model to characterize system nonlinearities and increase design flexibility.
+2. We propose a novel queuing model for deception attacks based on real-time attack detection—different from prior stochastic approaches.
+3. We introduce a switched event-triggered communication scheme adaptive to time-varying deception attack behaviors to save network resources.
+4. Using piecewise Lyapunov functional methods, we co-design fuzzy controllers and event-triggering parameters to guarantee exponential stability.
+
+Notation: In this paper, $\mathbb{R}^{n_x}$ denotes the $n_x$-dimensional Euclidean space, $I$ is the identity matrix, and $\mathbb{R}^{n\times m}$ denotes real $n\times m$ matrices. For a matrix $P$, $P^{-1}$ denotes its inverse and $P^{T}$ its transpose. For symmetric $P$, $\lambda_{\min}(P)$ and $\lambda_{\max}(P)$ denote its minimal and maximal eigenvalues. For a real number $h$, $\lfloor h\rfloor$ is the greatest integer no larger than $h$. Matrices are assumed to have compatible dimensions unless otherwise declared.
+
+---
+
+## 2 Preliminaries
+
+Figure 1 illustrates the designed event-based communication scheme for CPSs under deception attacks. The system state is periodically sampled; sampled data is transmitted only when preset conditions (decided by the ETM) are satisfied. A zero-order hold (ZOH) keeps the control information until the next event. Switched event triggers and controllers are adopted and will be detailed next: fuzzy system, deception-attack model, ETM, and fuzzy controllers.
+
+### 2.1 Physical plant
+
+Consider a nonlinear CPS approximated by a T–S fuzzy model.
+
+**Plant rule $i$**:
+
+IF $\phi_1(x(t))$ is $W_{i1}$ and $\cdots$ and $\phi_r(x(t))$ is $W_{ir}$
+
+THEN
+$$
+\dot{x}(t) = A_i x(t) + B_i u(t), \quad i = 1,2,\ldots,q
+$$
+
+where $x(t)\in\mathbb{R}^{n_x}$ and $u(t)\in\mathbb{R}^{n_u}$ are the state and control input; $A_i,B_i$ are constant matrices for rule $i$; $q$ is the number of rules; $\phi(x(t))=[\phi_1(x(t)),\ldots,\phi_r(x(t))]$ is the premise variable; $W_{iv}$ are fuzzy sets.
+
+By singleton fuzzifier, product inference and center-average defuzzifier, system (1) becomes
+$$
+\dot{x}(t) = \sum_{i=1}^q \vartheta_i(\phi(t))\big[A_i x(t) + B_i u(t)\big],
+$$
+with
+$$
+\vartheta_i(\phi(x(t))) = \frac{\varpi_i(\phi(x(t)))}{\sum_{i=1}^q \varpi_i(\phi(x(t)))},\qquad
+\varpi_i(\phi(x(t)))=\prod_{v=1}^r W_{iv}(\phi_v(x(t))).
+$$
+Assume $\varpi_i(\phi(x(t)))>0$ for all $t>0$, thus $\vartheta_i>0$ and $\sum_i\vartheta_i=1$. We abbreviate $\vartheta_i(\phi(x(t)))$ as $\vartheta_i$.
+
+Fuzzy controllers and the system need not share the same premise variables [8]. A rule of the $j$th controller:
+
+IF $\hat\phi_1(\hat x(t))$ is $\hat W_{j1}$ and $\cdots$ and $\hat\phi_p(\hat x(t))$ is $\hat W_{jp}$
+
+THEN
+$$
+u(t) = K_j \hat x(t), \quad j = 1,2,\ldots,q,
+$$
+
+where $\hat x(t)$ is the (possibly corrupted) state arriving at the controller via the network; $K_j$ are controller gains; $\hat\phi(\hat x(t))=[\hat\phi_1(\hat x(t)),\ldots,\hat\phi_p(\hat x(t))]$.
+
+The defuzzified form is
+$$
+u(t) = \sum_{j=1}^q \omega_j(\hat\phi(\hat x(t)))\, K_j \hat x(t),
+$$
+with
+$$
+\omega_j(\hat\phi(\hat x(t)))=\frac{\gamma_j(\hat\phi(\hat x(t)))}{\sum_{j=1}^q \gamma_j(\hat\phi(\hat x(t)))},\qquad
+\gamma_j(\hat\phi(\hat x(t)))=\prod_{v=1}^p \hat W_{jv}(\hat\phi_v(\hat x(t))).
+$$
+
+**Assumption 1.** During network transmission, transmission delays and packet losses are out of scope. System states are assumed to be fully measurable.
+
+### 2.2 Modelling of deception attacks
+
+We consider false-data-injection deception attacks. The state arriving at the controller is
+$$
+\hat x(t) = x(t) + \varsigma(t),
+$$
+where $\varsigma(t)$ is the injected false data, a bounded-energy signal.
+
+From the attack-detection perspective, define
+$$
+\Lambda(t) =
+\begin{cases}
+1, & t\in[f^n,\, f^n + f^{n}_{\mathrm{off}}),\\[4pt]
+2, & t\in[f^n + f^{n}_{\mathrm{off}},\, f^{n+1}).
+\end{cases}
+$$
+(Here $0\le f^n < f^n + f^{n}_{\mathrm{off}} < f^{n+1}$ and $n\in\mathbb{N}$.) Let $\Upsilon^1_n=[f^n,\, f^n + f^{n}_{\mathrm{off}})$ denote the sleeping time interval (attack weak enough to escape detection), with
+$$
+\|\varsigma(t)\|_2 \le \varepsilon_1 \|x(t)\|_2,\quad t\in\Upsilon^1_n.
+$$
+Let $\Upsilon^2_n=[f^n + f^{n}_{\mathrm{off}},\, f^{n+1})$ denote the active interval (high attack level) with
+$$
+\varepsilon_1\|x(t)\|_2 < \|\varsigma(t)\|_2 \le \varepsilon_2\|x(t)\|_2,\quad t\in\Upsilon^2_n.
+$$
+
+**Assumption 2.** There exist scalars $f_{\min}>0$ and $f_{\max}>0$ such that
+$$
+\inf_{n\in\mathbb{N}}\{f^{n}_{\mathrm{off}}\} \ge f_{\min},\qquad
+\sup_{n\in\mathbb{N}}\{f^{n}_{\mathrm{on}}\} \le f_{\max},
+$$
+where $f^{n}_{\mathrm{on}}=f^{n+1}-f^n-f^{n}_{\mathrm{off}}$ is the duration of the $n$th malicious attack.
+
+Because analysis is based on sampling instants (ETM applied), attack sequences in (6) are rewritten in sampled-aligned form:
+$$
+\Lambda(t) =
+\begin{cases}
+1, & t\in[F^n,\, F^n + F^{n}_{\mathrm{off}}),\\[4pt]
+2, & t\in[F^n + F^{n}_{\mathrm{off}},\, F^{n+1}),
+\end{cases}
+$$
+where $F^n=\big(\lfloor f^n/h\rfloor + 1\big)h$, $F^{n}_{\mathrm{off}}=\big(\lfloor (f^n+f^{n}_{\mathrm{off}})/h\rfloor+1\big)h-F^n$.
+
+**Assumption 3.** For the sampled intervals, there exist $F_{\min}>0$ and $F_{\max}>0$ such that
+$$
+\inf_{n\in\mathbb{N}}\{F^{n}_{\mathrm{off}}\}\ge F_{\min}=\lfloor f_{\min}/h\rfloor h,\qquad
+\sup_{n\in\mathbb{N}}\{F^{n}_{\mathrm{on}}\}\le F_{\max}=\big(\lfloor f_{\max}/h\rfloor+1\big)h,
+$$
+with $F^{n}_{\mathrm{on}}=F^{n+1}-F^n-F^{n}_{\mathrm{off}}$.
+
+(Figure 2 illustrates the sampled-time sequence for intermittent deception attacks.)
+
+### 2.3 Design of switched event-triggered mechanism
+
+Given $\Lambda(t)$, we propose the following switched ETM:
+
+\[
+\begin{aligned}
+b_{n,k+1}^{\Lambda(t)}h &= b_{n,k}^{\Lambda(t)}h + \min_{s\ge 1,\; s\in\mathbb{N}}\big\{ sh \mid e^T(t)\Omega_{\Lambda(t)} e(t) \\
+&\qquad - \delta x^T(b_{n,k}^{\Lambda(t)}h)\Omega_{\Lambda(t)} x(b_{n,k}^{\Lambda(t)}h) \ge \varrho(sh)\big\},
+\end{aligned}
+\]
+
+where
+\[
+\varrho(sh)=\alpha\varepsilon_2(\Lambda(t)-1)\,x^T(b_{n,k}^{\Lambda(t)}h + sh)\,\Omega_{\Lambda(t)}\,x(b_{n,k}^{\Lambda(t)}h + sh),
+\]
+\[
+e(t)=x(b_{n,k}^{\Lambda(t)}h)-x(b_{n,k}^{\Lambda(t)}h + sh),
+\]
+and
+\[
+b_{n,0}^{\Lambda(t)}h =
+\begin{cases}
+F^n, & \Lambda(t)=1,\\[4pt]
+F^n + F^{n}_{\mathrm{off}}, & \Lambda(t)=2.
+\end{cases}
+\]
+
+Here $\alpha,\delta>0$ are constants, $h$ the sampling period, and $\Omega_{\Lambda(t)}>0$ a weighting matrix. For $k\in\mathbb{N}$, $\{b_{n,k}^1\}$ are release instants in sleeping intervals and $\{b_{n,k}^2\}$ in active intervals.
+
+**Remark.** When $\Lambda(t)=1$ the trigger reduces to the standard periodic ETM (see [22]). When $\Lambda(t)=2$, $\varrho(sh)$ is positive and larger inter-execution times result (fewer transmissions when data are known to be corrupted). Event triggers are forced at sampling instants when off/on or on/off transitions occur, so
+$$
+\sup_{k}\{b_{n,k}^1 h\} < F^n + F^{n}_{\mathrm{off}},\qquad
+\sup_{k}\{b_{n,k}^2 h\} < F^{n+1}.
+$$
+
+### 2.4 The overall model
+
+Divide each interval $[b_{n,k}^{\Lambda(t)}h, b_{n,k+1}^{\Lambda(t)}h)$ into $s_M+1$ subintervals of length $h$; denote subintervals $\chi_{n,k,s}^{\Lambda(t)}=[b_{n,k}^{\Lambda(t)}h + sh,\; b_{n,k}^{\Lambda(t)}h + (s+1)h)$. For $t\in\chi_{n,k,s}^{\Lambda(t)}$ define $\eta(t)=t-b_{n,k}^{\Lambda(t)}h - sh$ with $0\le\eta(t)<h$.
+
+As a ZOH is used, for $t\in\chi_{n,k,s}^{\Lambda(t)}$ the control is
+$$
+u(t) = \sum_{j=1}^q \omega_j K_{j,\Lambda(t)}\big( x(b_{n,k}^{\Lambda(t)}h) + \varsigma(t)\big),
+$$
+with controller gains $\{K_{j,\Lambda(t)}\}$.
+
+Combining system dynamics and the ETM yields the closed-loop model (for $t\in\chi_{n,k,s}^{\Lambda(t)}$):
+\[
+\begin{cases}
+\dot{x}(t) = \sum_{i=1}^q\sum_{j=1}^q \vartheta_i\omega_j\big[A_i x(t) + B_i K_{j,\Lambda(t)}(e(t) + x(t-\eta(t)) + \varsigma(t))\big],\\[4pt]
+x(t)=\psi(t),\quad t\in[-h,0].
+\end{cases}
+\]
+
+**Definition 1 (Attack Frequency).** Let $N(0,t)=\mathrm{card}\{n\in\mathbb{N}\mid 0<F^n+F^n_{\mathrm{off}}<t\}$ be the number of off/on transitions on $(0,t)$. If constants $\tau_a>0$ and $\nu>0$ exist with $N(0,t)\le \nu + t/\tau_a$, the deception-attack signal satisfies the attack frequency constraint $(\tau_a,\nu)$.
+
+**Definition 2 (Exponential Stability).** System (21) is exponentially stable (ES) if constants $\varrho>0$ and $\epsilon>0$ exist such that $\|x(t)\|\le \epsilon e^{-\varrho t}\|\psi_0\|_h$ for all $t>0$, where $\|\psi_0\|_h\triangleq\sup_{-h\le\theta\le 0}\{\|x(\theta)\|,\|\dot x(\theta)\|\}$ and $\varrho$ is the decay rate.
+
+Our control objective: design switched fuzzy controllers based on the switched ETM (14) that guarantee ES under intermittent deception attacks.
+
+---
+
+## 3 Main results
+
+**Theorem 1.** For prescribed scalars $\delta\in(0,1)$, $\alpha,\varepsilon_m,\beta_m,\mu_m\in(1,\infty)$, $m\in\{1,2\}$, $F_{\min},F_{\max},\tau_a$ and $h$ satisfying
+$$
+\varrho=\frac{2\beta_1 F_{\min} - 2(\beta_1+\beta_2)h - 2\beta_2 F_{\max} - \ln(\mu_1\mu_2)}{\tau_a} > 0,
+$$
+the system (21) with given gains $K_{jm}$ is exponentially stable under the intermittent deception attack provided the membership functions satisfy $\omega_j - \iota_j \vartheta_j \ge 0$, and there exist $P_m>0,Q_m>0,R_m>0,\Omega_m>0$ and matrices $N_{ml},M_{ml}$, $l\in\{1,2\}$, and $\Delta_i^m=\Delta_i^{mT}$ with appropriate dimensions such that the LMIs (23)–(26) (as in the paper) hold.
+
+*(The full LMI formulation and matrix definitions are given in the original paper — they were kept in LaTeX-math form in the conversion and are preserved here.)*
+
+**Proof (sketch).** The proof uses a piecewise Lyapunov–Krasovskii functional:
+$$
+V_m(t) = V_{m1}(t) + V_{m2}(t) + V_{m3}(t),
+$$
+with
+$$
+V_{m1}(t)=x^T(t)P_m x(t),\quad
+V_{m2}(t)=\int_{t-h}^t \kappa_m x^T(s) Q_m x(s)\,ds,\quad
+V_{m3}(t)=\int_{-h}^0\int_{t+v}^t \kappa_m \dot x^T(s) R_m \dot x(s)\,ds\,dv,
+$$
+and $\kappa_m=e^{2(-1)^m\beta_m(t-s)}$. Then the time-derivative is bounded over sleeping and active modes, and combining the bounds with Assumption 3 gives the decay rate condition above. The detailed LMI manipulations are in the original text.
+
+---
+
+## 4 Simulation examples
+
+A mass–spring–damper system is used to verify the proposed approach [34]. The system dynamics:
+$$
+m\ddot x + F_f + F_s = u(t).
+$$
+
+(Parameters, fuzzy-controller gains, and initial state used in simulation are listed in the original manuscript; see Figures 5–8 and Tables 1–5 for numerical results and plots.)
+
+**Tables and figures (cleaned):**
+
+**Table 1.** Releasing number $N_r$ for different values of $\delta$:
+
+| $\delta$ | 0.05 | 0.1 | 0.2 | 0.3 | 0.4 |
+| :--: | :--: | :--: | :--: | :--: | :--: |
+| $N_r$ | 247 | 192 | 143 | 122 | 99 |
+
+**Fig. 5.** (State responses and releasing period)  
+**Fig. 6.** Response of the control input.  
+**Fig. 7–8.** Comparisons with the original ETM in [22].
+
+**Table 2.** Parameter settings and simulation results:
+
+| Method | $\alpha$ | $f_{\max}$ | Releasing number |
+| :-- | :--: | :--: | :--: |
+| Switched ETM | 0.5 | 80 h | 143 |
+| Switched ETM | 0.3 | 80 h | 151 |
+| Switched ETM | 0.1 | 80 h | 162 |
+| Switched ETM | 0.05 | 80 h | 171 |
+| Switched ETM | 0.01 | 80 h | 183 |
+
+(Other simulation tables — Tables 3–5 — show restricted relationships between $F_{\min}$ and $F_{\max}$ and decay rates for different interval sizes.)
+
+---
+
+## 5 Conclusion
+
+This paper investigated event-triggered control of CPSs under deception attacks. A queuing model was constructed to depict deception attacks. A switched event-based communication scheme was proposed to adapt triggering according to attack mode and save network resources. Using piecewise Lyapunov functionals, fuzzy controllers and ETM parameters were co-designed to guarantee exponential stability. The approach was validated on a mass–spring–damper example. Future work includes extending the method to CPSs with exogenous disturbances and more general cyber-attacks.
+
+---
+
+## Acknowledgements
+
+This work was supported by National Natural Science Foundation of China grant No. 52005266. :contentReference[oaicite:2]{index=2}
+
+---
+
+## Declarations
+
+**Conflict of interest.** The authors declare no conflict of interest.  
+**Code availability.** Codes used are available from the corresponding author on request.
+
+---
+
+## References
+
+(References are preserved as in the original PDF. See the original reference list for full details.) :contentReference[oaicite:3]{index=3}
+
